@@ -1,25 +1,67 @@
 import logo from './logo.svg';
 import './App.css';
+import React, { useState } from "react"
 
-function App() {
+
+const App = () => {
+  
+  const stories = [
+    {
+      title: "React",
+      url: "https://reactjs.org/",
+      author: "Jordan Walke",
+      num_comments: 3,
+      points: 4,
+      objectId: 0
+    },
+    {
+      title: "Redux",
+      url: "https://redux.js.org/",
+      author: "Dan Abramov, Andrew Clark",
+      num_comments: 2,
+      points: 5,
+      objectId: 1
+    }
+  ]
+
+const [searchTerm, setSearchTerm] = useState('')
+
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div>
+        <h1>My Hacker Stories</h1>
+
+        <label htmlFor = "search">Search:</label>
+        <input id = "search" type = "text" onChange = {handleChange} />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Searching for <strong>{searchTerm}</strong>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <hr />
+
+      <List list = {stories}/>
+      
+      
     </div>
   );
 }
+
+const List = (props) => {
+  return props.list.map(item => {
+    return (
+      <div key = {item.objectId}>
+        <span>
+          <a href = {item.url}>{item.title}</a>
+        </span>
+        <span>{item.author}</span>
+        <span>{item.num_comments}</span>
+        <span>{item.points}</span>
+      </div>
+    )
+  })
+}
+
 
 export default App;
