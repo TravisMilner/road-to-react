@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 
 const App = () => {
@@ -23,45 +23,63 @@ const App = () => {
       objectId: 1
     }
   ]
+const [searchTerm, setSearchTerm] = useState(localStorage.getItem("search") || "React")
 
-const [searchTerm, setSearchTerm] = useState('')
+useEffect(() => {
+  localStorage.setItem("Search", searchTerm)
+}, [searchTerm])
 
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value)
-  }
+const handleSearch = (event) => {
+  setSearchTerm(event.target.value)
+  
+}
 
+const searchedStories = stories.filter(story => {
+  return story.title.toLowerCase().includes(searchTerm.toLowerCase())
+})
+  
+  
   return (
     <div>
         <h1>My Hacker Stories</h1>
 
-        <label htmlFor = "search">Search:</label>
-        <input id = "search" type = "text" onChange = {handleChange} />
-        <p>
-          Searching for <strong>{searchTerm}</strong>
-        </p>
-        <hr />
+      <Search search = {searchTerm} onSearch = {handleSearch} />
+      <hr />
 
-      <List list = {stories}/>
+      <List list = {searchedStories}/>
       
       
     </div>
   );
 }
 
-const List = (props) => {
-  return props.list.map(item => {
-    return (
-      <div key = {item.objectId}>
-        <span>
-          <a href = {item.url}>{item.title}</a>
-        </span>
-        <span>{item.author}</span>
-        <span>{item.num_comments}</span>
-        <span>{item.points}</span>
-      </div>
-    )
-  })
+const Search = ({search, onSearch}) => {
+  
+
+
+ return (
+      <div>
+        <label htmlFor = "search">Search:</label>
+        <input id = "search" type = "text" value = {search} onChange = {onSearch} />
+        
+        
+      </div>)
+
+
 }
+
+const List = ({list}) => list.map(item => <Item key = {item.objectId} item = {item} />)
+
+const Item = ({item}) => (
+  <div>
+    <span>
+      <a href = {item.url}>{item.title}</a>
+    </span>
+    <span>{item.author}</span>
+    <span>{item.num_comments}</span>
+    <span>{item.points}</span>
+  </div>
+)
 
 
 export default App;
